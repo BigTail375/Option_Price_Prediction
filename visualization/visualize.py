@@ -4,6 +4,7 @@ import sys
 import os
 import pandas as pd
 import numpy as np
+
 from tensorflow.keras.models import load_model
 
 class VisualMainWindow(QWidget):
@@ -289,3 +290,49 @@ if __name__ == '__main__':
     w = VisualMainWindow()
     w.show()
     app.exec_()
+
+# from PyQt5.QtCore import *
+# from PyQt5.QtWidgets import *
+# import sys
+# import os
+# import pandas as pd
+# import numpy as np
+# import tensorflow as tf
+# import cupy as cp  # Added CuPy import
+# from tensorflow.keras.models import load_model
+
+# # Configure TensorFlow to use GPU if available
+# physical_devices = tf.config.experimental.list_physical_devices('GPU')
+# if len(physical_devices) > 0:
+#     tf.config.experimental.set_memory_growth(physical_devices[0], True)
+
+# class VisualMainWindow(QWidget):
+#     # ... (rest of the class definition remains unchanged)
+
+#     def predictButtonClicked(self):
+#         # ... (rest of the method remains unchanged)
+
+#         # Modify the following line to convert premium and test to CuPy arrays
+#         premium = cp.array(premium)
+#         test = cp.array(test)
+
+#         # Predict using CuPy arrays
+#         pred = cp.array([[]], dtype=cp.float32)
+#         pred = cp.transpose(pred)
+
+#         for i in range(10):
+#             pred = cp.concatenate((pred, cp.asarray(self.model.predict(cp.asnumpy(test[int(self.count / 10 * i):int(self.count / 10 * (i + 1))])).round(4)))
+#             self.progressBar.setValue(i)
+
+#         # Convert pred back to NumPy array for further calculations
+#         pred = cp.asnumpy(pred)
+
+#         # ... (rest of the method remains unchanged)
+
+#     # ... (rest of the class methods remain unchanged)
+
+# if __name__ == '__main__':
+#     app = QApplication(sys.argv)
+#     w = VisualMainWindow()
+#     w.show()
+#     app.exec_()

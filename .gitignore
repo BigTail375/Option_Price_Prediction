@@ -1,3 +1,9 @@
 /.vscode
 /data_preprocessing
 /train
+/dataset
+
+/visualization/model
+visualization/input.npy
+visualization/output.npy
+visualization/model.h5
