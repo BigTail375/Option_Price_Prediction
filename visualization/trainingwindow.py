@@ -274,6 +274,8 @@ class TrainingMainWindow(QWidget):
 
         history = model.fit(train_X, train_y, epochs=100, batch_size=1000, validation_data=(val_X, val_y), callbacks=[checkpoint, reduce_lr])
         model.save('visualization/model.h5')
+
+        
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     w = TrainingMainWindow()
