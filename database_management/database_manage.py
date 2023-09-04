@@ -27,7 +27,7 @@ def download_latest_data():
     driver.get(DAILY_TOKEN)
     time.sleep(2)
     downloaded_files = []
-    for i in range(1, 3, 2):
+    for i in range(1, 131):
         download_button = driver.find_element(By.XPATH, f'//*[@id=\"fileList\"]/li[{i}]/a')
         cur_date = download_button.text[:10]
         downloaded_files.append(download_button.text)
