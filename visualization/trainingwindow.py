@@ -212,10 +212,11 @@ class TrainingMainWindow(QWidget):
             file_path = self.folderPath + '/options/' + file + 'options.csv'
             df = pd.read_csv(file_path)
             selected_data = df[['contract', 'ask', 'bid']]
-            if index == 0:  data = selected_data
-            else:   data = pd.concat([data, selected_data], axis = 0)
+            data.append(selected_data)
+            # if index == 0:  data = selected_data
+            # else:   data = pd.concat([data, selected_data], axis = 0)
             self.progressBar.setValue(index + 1)
-        
+        data = pd.concat(data, axis = 0)
         dataCount = 100000
         curPos = 0
         self.progressText.setText("data preprocssing ...")

@@ -200,9 +200,7 @@ class VisualMainWindow(QWidget):
         self.setHistoryTable(current_row)
 
     def predictButtonClicked(self):
-        allData = self.pastData[0]
-        for i in range(1, 10):
-            allData = pd.concat([allData, self.pastData[i]], ignore_index=True)
+        allData = pd.concat(self.pastData, ignore_index=True)
         grouped = allData.groupby('contract')
         contracts = []
         premium = []
