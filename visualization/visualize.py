@@ -71,9 +71,12 @@ class VisualMainWindow(QWidget):
         topNumBox.setValue(10)
         topNumBox.setMinimum(10)
         topNumBox.setMaximum(50)
+        downloadButton = QPushButton('Download csv')
+        downloadButton.clicked.connect(self.downloadButtonClicked)
 
         proLayout.addWidget(predictButton)
         proLayout.addWidget(topNumBox)
+        proLayout.addWidget(downloadButton)
 
         resultLayout = QHBoxLayout()
 
@@ -212,7 +215,7 @@ class VisualMainWindow(QWidget):
         self.progressBar.setRange(0, self.count - 1)
         self.progressText.setText("Data processing ...")
         cur = 0
-        # self.count = 1000
+        self.count = 1000
         underlying = []
         for key, group in grouped:
             if(len(group) == 10):
@@ -222,7 +225,7 @@ class VisualMainWindow(QWidget):
                 cur += 1
                 if cur % 1000 == 0:
                     self.progressBar.setValue(cur)
-                    # break
+                    break
         premium = np.array(premium)
         test = premium[:,1:] - premium[:,:-1]
         pred = np.array([[]])
@@ -257,9 +260,9 @@ class VisualMainWindow(QWidget):
         if len(self.predf) == 0:
             return
         show_count = int(self.topNumBox.value())
-        self.sorted_predf_top = self.predf.sort_values(by='predict', ascending=False).reset_index(drop=True)
+        self.sorted_predf_top = self.predf.sort_values(by='predict_value', ascending=False).reset_index(drop=True)
         self.setTable(self.filterTopTable, self.sorted_predf_top, show_count)
-        self.sorted_predf_bottom = self.predf.sort_values(by='predict', ascending=True).reset_index(drop=True)
+        self.sorted_predf_bottom = self.predf.sort_values(by='predict_value', ascending=True).reset_index(drop=True)
         self.setTable(self.filterBottomTable, self.sorted_predf_bottom, show_count)
     def prevPredButtonClicked(self):
         if self.count == 0:
@@ -268,7 +271,7 @@ class VisualMainWindow(QWidget):
             return
         t = int(self.showPredEdit.text()) - 1
         self.showPredEdit.setText(str(t))
-        pass
+        
     def nextPredButtonClicked(self):
         if self.count == 0:
             return
@@ -276,7 +279,7 @@ class VisualMainWindow(QWidget):
             return
         t = int(self.showPredEdit.text()) + 1
         self.showPredEdit.setText(str(t))
-        pass
+        
     def showPredEditChanged(self):
         if self.count == 0:
             return
@@ -284,7 +287,16 @@ class VisualMainWindow(QWidget):
             return
         self.curPredPos = int(self.showPredEdit.text())
         self.setTable(self.predResultTable, self.predf[self.curPredPos * 1000: (self.curPredPos + 1) * 1000].reset_index(drop=True), 1000)
+
+    def downloadButtonClicked(self):
+        show_count = int(self.topNumBox.value())
+        writer = pd.ExcelWriter('visualization/predict result.xlsx', engine='xlsxwriter')
+        self.predf.to_excel(writer, sheet_name='predict results', index = False)
+        self.sorted_predf_top[:show_count].to_excel(writer, sheet_name=f'maximum {show_count} results', index = False)
+        self.sorted_predf_bottom[:show_count].to_excel(writer, sheet_name=f'minimum {show_count} results', index = False)
+        writer.save()
         pass
+    
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     w = VisualMainWindow()

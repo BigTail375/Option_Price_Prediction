@@ -6,3 +6,4 @@
 visualization/input.npy
 visualization/output.npy
 visualization/model.h5
+predict result.xlsx
