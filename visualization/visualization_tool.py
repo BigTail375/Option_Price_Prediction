@@ -94,7 +94,7 @@ if __name__ == '__main__':
             print(data_count)
             
             cur = 0
-            data_count = 1000
+            # data_count = 1000
             underlying = []
             for key, group in grouped:
                 if(len(group) == past_data_count):
@@ -105,7 +105,7 @@ if __name__ == '__main__':
                     if cur % 1000 == 0:
                         progress_bar.progress(cur / data_count)
                         progress_status.text(f'Data processing {cur / data_count * 100}% ...')
-                        break
+                        # break
             progress_status.text('Data processing Finished!')
 
             premium = np.array(premium)

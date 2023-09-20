@@ -27,20 +27,27 @@ def download_latest_data():
     driver.get(DAILY_TOKEN)
     time.sleep(2)
     downloaded_files = []
-    for i in range(1, 131):
-        download_button = driver.find_element(By.XPATH, f'//*[@id=\"fileList\"]/li[{i}]/a')
-        cur_date = download_button.text[:10]
-        downloaded_files.append(download_button.text)
-        if cur_date not in dates:
-            download_button.click()
-            while any(fname.endswith(".crdownload") for fname in os.listdir(DOWNLOAD_DIRECTORY)):
-                time.sleep(1)
-            time.sleep(2)
+    button_number = 1
+    while True:
+        try:
+            download_button = driver.find_element(By.XPATH, f'//*[@id=\"fileList\"]/li[{button_number}]/a')
+            cur_date = download_button.text[:10]
+            downloaded_files.append(download_button.text)
+            if cur_date not in dates:
+                download_button.click()
+                while any(fname.endswith(".crdownload") for fname in os.listdir(DOWNLOAD_DIRECTORY)):
+                    time.sleep(1)
+                time.sleep(2)
+            button_number += 1
+        except:
+            break
     driver.quit()
     return downloaded_files
 
-downloaded_files = download_latest_data()
-for file in downloaded_files:
+files = [file for file in os.listdir(DOWNLOAD_DIRECTORY) if file.endswith('.cvs')]
+for file in files:
+# downloaded_files = download_latest_data()
+# for file in downloaded_files:
     csv_file = file[:-3] + 'csv'
     os.rename(os.path.join(DOWNLOAD_DIRECTORY, file), os.path.join(DOWNLOAD_DIRECTORY, csv_file))
     if csv_file[10:16] == 'stocks':
