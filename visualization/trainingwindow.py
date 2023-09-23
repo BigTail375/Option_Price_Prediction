@@ -74,28 +74,55 @@ class TrainingMainWindow(QWidget):
         trainingLayout.addLayout(trainInformationLayout)
         trainingLayout.addLayout(trainGraphLayout)
 
-        trainLayout1 = QHBoxLayout()
+        trainLayout1 = QVBoxLayout()
         trainLayout2 = QHBoxLayout()
         trainLayout3 = QHBoxLayout()
         trainLayout4 = QHBoxLayout()
         for _ in trainLayout1, trainLayout2, trainLayout3, trainLayout4:
             trainInformationLayout.addLayout(_)
         
-        trainLayout1.addWidget(QLabel('Interval:'))
+        trainLayout1.addWidget(QLabel('Features'))
+        featureLayout = QHBoxLayout()
+        trainLayout1.addLayout(featureLayout)
+        deselectedLayout = QVBoxLayout()
+        addDelLayout = QVBoxLayout()
+        selectedLayout = QVBoxLayout()
+        for _ in deselectedLayout, addDelLayout, selectedLayout:
+            featureLayout.addLayout(_)
+        deselectedLayout.addWidget(QLabel('Deselected features'))
+        deselectedWidget = self.deselectedWidget = QListWidget()
+        deselectedLayout.addWidget(deselectedWidget)
+        for item in self.deselectedFeatures:
+            deselectedWidget.addItem(item)
+        addDelLayout.addSpacing(100)
+        addListButton = self.addListButton = QPushButton('>>')
+        delListButton = self.delListButton = QPushButton('<<')
+        addListButton.setMaximumWidth(30)
+        delListButton.setMaximumWidth(30)
+        addListButton.clicked.connect(self.addFeatureButtonClicked)
+        delListButton.clicked.connect(self.delFeatureButtonClicked)
+        addDelLayout.addWidget(addListButton)
+        addDelLayout.addWidget(delListButton)
+        addDelLayout.addSpacing(100)
+        selectedLayout.addWidget(QLabel('Selected features'))
+        selectedWidget = self.selectedWidget = QListWidget()
+        selectedLayout.addWidget(selectedWidget)
+
+        trainLayout2.addWidget(QLabel('Interval:'))
         intervalCombo = self.intervalCombo = QComboBox()
         intervalCombo.addItems(self.intervalName)
-        trainLayout1.addWidget(intervalCombo)
-        trainLayout1.addWidget(QLabel('Model Type:'))
+        trainLayout2.addWidget(intervalCombo)
+        trainLayout2.addWidget(QLabel('Model Type:'))
         modelTypeCombo = self.modelTypeCombo = QComboBox()
         modelTypeCombo.addItems(self.modelType)
-        trainLayout1.addWidget(modelTypeCombo)
+        trainLayout2.addWidget(modelTypeCombo)
         
         trainLayout3.addWidget(QLabel('Sample count:'))
         sampleCountEdit = self.sampleCountEdit = QLineEdit()
         trainLayout3.addWidget(sampleCountEdit)
-        # trainLayout3.addWidget(QLabel('Data count:'))
-        # dataCountEdit = self.dataCountEdit = QLineEdit()
-        # trainLayout3.addWidget(dataCountEdit)
+        trainLayout3.addWidget(QLabel('Data count:'))
+        dataCountEdit = self.dataCountEdit = QLineEdit()
+        trainLayout3.addWidget(dataCountEdit)
 
         dataProcessingButton = self.dataProcessingButton = QPushButton('Data Processing')
         dataProcessingButton.clicked.connect(self.dataProcessingButtonClicked)
@@ -128,7 +155,8 @@ class TrainingMainWindow(QWidget):
         self.inputFeatures = ['strike', 'ask', 'bid', 'stock price']
         self.selectedInputFeatures = []
         self.outputFeatures = ['premium', 'ask + bid']
-
+        self.selectedFeatures = []
+        self.deselectedFeatures = ['strike', 'bid', 'ask', 'open_interest', 'expiration date', 'delta', 'theta', 'vega', 'implied_volatility', 'open', 'high', 'low', 'close', 'volume']
     def setFileList(self):
         self.fileListBox.clear()
         for item in self.fileList:
@@ -276,7 +304,18 @@ class TrainingMainWindow(QWidget):
         history = model.fit(train_X, train_y, epochs=100, batch_size=1000, validation_data=(val_X, val_y), callbacks=[checkpoint, reduce_lr])
         model.save('visualization/model.h5')
 
-        
+    def addFeatureButtonClicked(self):
+        if self.deselectedWidget.currentItem() is not None:
+            index = int(self.deselectedWidget.currentIndex().row())
+            self.selectedWidget.addItem(self.deselectedWidget.takeItem(index))
+            self.selectedFeatures.append(self.deselectedFeatures.pop(index))
+
+    def delFeatureButtonClicked(self):
+        if self.selectedWidget.currentItem() is not None:
+            index = int(self.selectedWidget.currentIndex().row())
+            self.deselectedWidget.addItem(self.selectedWidget.takeItem(index))
+            self.deselectedFeatures.append(self.selectedFeatures.pop(index))
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     w = TrainingMainWindow()
