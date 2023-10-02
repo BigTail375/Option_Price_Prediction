@@ -283,7 +283,7 @@ class TrainingMainWindow(QWidget):
         y = y[permutation_index]
         y = y.reshape(-1, 1)
 
-        scaler_x = MinMaxScaler()
+        scaler_x = MinMaxScaler(feature_range=(-np.pi, np.pi))
         X = scaler_x.fit_transform(X)
 
         train_X, val_X, test_X = self.divide_data(X, 0.6, 0.2, 0.2)
