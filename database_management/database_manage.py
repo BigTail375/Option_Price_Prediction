@@ -44,10 +44,8 @@ def download_latest_data():
     driver.quit()
     return downloaded_files
 
-files = [file for file in os.listdir(DOWNLOAD_DIRECTORY) if file.endswith('.cvs')]
-for file in files:
-# downloaded_files = download_latest_data()
-# for file in downloaded_files:
+downloaded_files = download_latest_data()
+for file in downloaded_files:
     csv_file = file[:-3] + 'csv'
     os.rename(os.path.join(DOWNLOAD_DIRECTORY, file), os.path.join(DOWNLOAD_DIRECTORY, csv_file))
     if csv_file[10:16] == 'stocks':

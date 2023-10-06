@@ -213,7 +213,7 @@ class VisualMainWindow(QWidget):
         self.progressBar.setRange(0, self.count - 1)
         self.progressText.setText("Data processing ...")
         cur = 0
-        self.count = 1000
+        # self.count = 1000
         underlying = []
         for key, group in grouped:
             if(len(group) == 10):
@@ -223,7 +223,7 @@ class VisualMainWindow(QWidget):
                 cur += 1
                 if cur % 1000 == 0:
                     self.progressBar.setValue(cur)
-                    break
+                    # break
         premium = np.array(premium)
         test = premium[:,1:] - premium[:,:-1]
         pred = np.array([[]])
