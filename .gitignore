@@ -2,8 +2,13 @@
 /data_preprocessing
 /train
 /dataset
+/__pycache__
+spread/__pycache__
 /visualization/model
 visualization/input.npy
 visualization/output.npy
 visualization/model.h5
 predict result.xlsx
+spread/convert.py
+sreapd/spread_vertical.csv
+spread/spread_butterfly.csv
