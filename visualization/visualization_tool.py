@@ -7,6 +7,7 @@ import numpy as np
 import os
 
 from tensorflow.keras.models import load_model
+from tws_api import *
 
 def init_state():
     if 'database_path' not in st.session_state:
@@ -49,8 +50,10 @@ if __name__ == '__main__':
             view_file_name = st.sidebar.selectbox('Select data', st.session_state.file_list, index = 0)
             st.session_state.file_index = st.session_state.file_list.index(view_file_name)
             
-            options_data = pd.read_csv(st.session_state.database_path + '/options/' + st.session_state.file_list[st.session_state.file_index] + 'options.csv')
-            stocks_data = pd.read_csv(st.session_state.database_path + '/stocks/' + st.session_state.file_list[st.session_state.file_index] + 'stocks.csv')
+            # options_data = pd.read_csv(st.session_state.database_path + '/options/' + st.session_state.file_list[st.session_state.file_index] + 'options.csv')
+            # stocks_data = pd.read_csv(st.session_state.database_path + '/stocks/' + st.session_state.file_list[st.session_state.file_index] + 'stocks.csv')
+            options_data = get_historical_option_data
+            stocks_data = get_historical_stock_data
             
             st.subheader("Option data")
             st.table(options_data[0:100])

@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 
 from tensorflow.keras.models import load_model
+from tws_api import *
 
 class VisualMainWindow(QWidget):
     def __init__(self, *args, **kwargs):
@@ -162,10 +163,12 @@ class VisualMainWindow(QWidget):
                 item = QTableWidgetItem(str(value))
                 table.setItem(i, j, item)
     def setHistoryTable(self, index):
-        option_data = pd.read_csv(self.folderPath + "\\options\\" + self.fileList[index] + "options.csv")
+        #option_data = pd.read_csv(self.folderPath + "\\options\\" + self.fileList[index] + "options.csv")
+        option_data = get_historical_option_data()
         self.setTable(self.optionTable, option_data, 1000)
         
-        stock_data = pd.read_csv(self.folderPath + "\\stocks\\" + self.fileList[index] + "stocks.csv")
+        #stock_data = pd.read_csv(self.folderPath + "\\stocks\\" + self.fileList[index] + "stocks.csv")
+        stock_data = get_historical_stock_data()
         self.setTable(self.stockTable, stock_data, 1000)
 
     def readButtonClicked(self):
@@ -182,7 +185,8 @@ class VisualMainWindow(QWidget):
                 self.setFileList()
                 self.setHistoryTable(0)
                 for file in os.listdir(options_path)[-10:]:
-                    df = pd.read_csv(os.path.join(options_path, file))
+                    # df = pd.read_csv(os.path.join(options_path, file))
+                    df = get_historical_option_data()
                     self.pastData.append(df[:])
                     print(file)
                 self.progressText.setText('Loading Completed!')

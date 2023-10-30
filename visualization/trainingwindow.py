@@ -10,6 +10,7 @@ from tensorflow.keras.layers import Dense, LSTM, Dropout, Flatten
 from tensorflow.keras.callbacks import ModelCheckpoint, ReduceLROnPlateau
 from tensorflow.keras.optimizers import Adam
 from sklearn.preprocessing import MinMaxScaler
+from tws_api import *
 
 class TrainingMainWindow(QWidget):
     def __init__(self, *args, **kwargs):
@@ -238,12 +239,14 @@ class TrainingMainWindow(QWidget):
         self.progressBar.setRange(0, len(selectedFiles))
         for index, file in enumerate(selectedFiles):
             file_path = self.folderPath + '/options/' + file + 'options.csv'
-            df = pd.read_csv(file_path)
+            #df = pd.read_csv(file_path)
+            df = get_historical_option_data
             selected_data = df[['contract', 'ask', 'bid']]
             data.append(selected_data)
             # if index == 0:  data = selected_data
             # else:   data = pd.concat([data, selected_data], axis = 0)
             self.progressBar.setValue(index + 1)
+
         data = pd.concat(data, axis = 0)
         dataCount = 100000
         curPos = 0
